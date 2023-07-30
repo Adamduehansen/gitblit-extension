@@ -56,7 +56,4 @@ async function updateTicketInStore(): Promise<void> {
 
 const storageService = new StorageService(ChromeStorageRepository);
 
-// chrome.alarms.create({
-//   periodInMinutes: 1 / 60
-// })
 updateTicketInStore();
