@@ -1,4 +1,4 @@
-import { StorageRepository, StorageService } from './StorageService';
+import { StorageRepository, StorageService, Ticket } from './StorageService';
 
 describe('storage', () => {
   describe('StorageService', () => {
@@ -19,7 +19,7 @@ describe('storage', () => {
         const storageService = new StorageService(repository);
 
         // Act
-        const ticket = await storageService.get('any-repo', 1);
+        const ticket = await storageService.getTicket('any-repo', 1);
 
         // Assert
         expect(ticket).not.toBeUndefined();
@@ -34,7 +34,7 @@ describe('storage', () => {
         const storageService = new StorageService(repository);
 
         // Act
-        const ticket = await storageService.get('any-repo', 1);
+        const ticket = await storageService.getTicket('any-repo', 1);
 
         // Assert
         expect(ticket).toBeUndefined();
@@ -55,6 +55,38 @@ describe('storage', () => {
 
         // Assert
         expect(repository.setTickets).toHaveBeenCalled();
+      });
+    });
+
+    describe('setTicket', () => {
+      test('should add ticket with repository', async () => {
+        // Arrange
+        const ticketInStorage: Ticket = {
+          repository: 'any-repo',
+          number: 1,
+          changes: [],
+          title: 'any-title',
+        };
+        const repository: StorageRepository = {
+          getTickets: async () => [ticketInStorage],
+          setTickets: jest.fn(),
+        };
+        const storageService = new StorageService(repository);
+        const ticket: Ticket = {
+          repository: 'any-repo',
+          number: 2,
+          changes: [],
+          title: 'any-title',
+        };
+
+        // Act
+        await storageService.setTicket(ticket);
+
+        // Assert
+        expect(repository.setTickets).toHaveBeenCalledWith([
+          ticketInStorage,
+          ticket,
+        ]);
       });
     });
   });

@@ -46,16 +46,22 @@ export const ChromeStorageRepository: StorageRepository = {
 export class StorageService {
   constructor(private _storageRepository: StorageRepository) {}
 
-  public async get(
+  public async getTicket(
     repository: string,
     number: number
   ): Promise<Ticket | undefined> {
     const allTickets = await this._storageRepository.getTickets();
-    console.log(allTickets);
 
     return allTickets.find(
       (ticket) => ticket.repository === repository && ticket.number === number
     );
+  }
+
+  public async setTicket(ticket: Ticket): Promise<void> {
+    const allTickets = await this._storageRepository.getTickets();
+    const updatedAllTickets = [...allTickets, ticket];
+
+    await this._storageRepository.setTickets(updatedAllTickets);
   }
 
   public async initializeStorage() {
