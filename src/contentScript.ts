@@ -1,4 +1,9 @@
-import { TicketScheme, type Ticket, getTicket } from './storage';
+import {
+  type Ticket,
+  TicketScheme,
+  StorageService,
+  ChromeStorageRepository,
+} from './StorageService';
 
 const messageTypes = ['NEW_COMMENT', 'NEW_REVISION'] as const;
 type MessageType = (typeof messageTypes)[number];
@@ -31,7 +36,11 @@ function getTicketJson(): Ticket {
 async function updateTicketInStore(): Promise<void> {
   const ticket = getTicketJson();
 
-  const existingTicket = await getTicket(ticket.repository, ticket.number);
+  const storageService = new StorageService(ChromeStorageRepository);
+  const existingTicket = await storageService.get(
+    ticket.repository,
+    ticket.number
+  );
 
   sendMessage('NEW_COMMENT');
 }

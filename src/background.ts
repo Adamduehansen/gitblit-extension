@@ -1,5 +1,7 @@
 // type Tab = chrome.tabs.Tab;
 
+import { ChromeStorageRepository, StorageService } from './StorageService';
+
 // async function getGitblitTicketTabs(): Promise<Tab[]> {
 //   const queryInformation: chrome.tabs.QueryInfo = {
 //     url: '*://*/tickets/export/*',
@@ -60,4 +62,11 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     title: 'Gitblit Extension',
     type: 'basic',
   });
+});
+
+chrome.runtime.onInstalled.addListener(async () => {
+  console.log('Installing Extension!');
+
+  const storageService = new StorageService(ChromeStorageRepository);
+  await storageService.initializeStorage();
 });
