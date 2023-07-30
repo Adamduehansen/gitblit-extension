@@ -1,4 +1,4 @@
-import { Ticket } from '../model';
+import { Ticket } from './model';
 
 interface ChangeDifferences {
   hasNewComments: boolean;

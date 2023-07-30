@@ -1,4 +1,4 @@
-import { Ticket } from './model';
+import { Ticket } from '../utils/model';
 
 interface LocalStorage {
   tickets: Ticket[];
@@ -41,12 +41,30 @@ export class StorageService {
 
   public async setTicket(ticket: Ticket): Promise<void> {
     const allTickets = await this._storageRepository.getTickets();
-    const updatedAllTickets = [...allTickets, ticket];
+    let existingTicketIndex = allTickets.findIndex(
+      this.findExistingTicket(ticket.repository, ticket.number)
+    );
 
-    await this._storageRepository.setTickets(updatedAllTickets);
+    if (existingTicketIndex < 0) {
+      const updatedAllTickets = [...allTickets, ticket];
+      await this._storageRepository.setTickets(updatedAllTickets);
+      return;
+    }
+
+    allTickets[existingTicketIndex] = ticket;
+    await this._storageRepository.setTickets(allTickets);
   }
 
   public async initializeStorage() {
     await this._storageRepository.setTickets([]);
+  }
+
+  private findExistingTicket(
+    repository: string,
+    number: number
+  ): (ticket: Ticket) => boolean {
+    return function (ticket: Ticket): boolean {
+      return ticket.repository === repository && ticket.number === number;
+    };
   }
 }

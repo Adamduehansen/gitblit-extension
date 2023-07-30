@@ -1,5 +1,5 @@
 import { StorageRepository, StorageService } from './StorageService';
-import { Ticket } from './model';
+import { Ticket } from '../utils/model';
 
 describe('storage', () => {
   describe('StorageService', () => {
@@ -60,7 +60,7 @@ describe('storage', () => {
     });
 
     describe('setTicket', () => {
-      test('should add ticket with repository', async () => {
+      test('should add new ticket with repository', async () => {
         // Arrange
         const ticketInStorage: Ticket = {
           repository: 'any-repo',
@@ -88,6 +88,42 @@ describe('storage', () => {
           ticketInStorage,
           ticket,
         ]);
+      });
+
+      test('should update ticket in storage', async () => {
+        // Arrange
+        const repository: StorageRepository = {
+          getTickets: async () => [
+            {
+              repository: 'any-repo',
+              number: 1,
+              changes: [],
+              title: 'any-title',
+            },
+          ],
+          setTickets: jest.fn(),
+        };
+
+        const storageService = new StorageService(repository);
+        const updatedTicket: Ticket = {
+          repository: 'any-repo',
+          number: 1,
+          changes: [
+            {
+              comment: {
+                id: 'any-id',
+                text: 'any-text',
+              },
+            },
+          ],
+          title: 'any-title',
+        };
+
+        // Act
+        await storageService.setTicket(updatedTicket);
+
+        // Assert
+        expect(repository.setTickets).toHaveBeenCalledWith([updatedTicket]);
       });
     });
   });

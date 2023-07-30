@@ -1,5 +1,12 @@
-import { StorageService, ChromeStorageRepository } from './StorageService';
-import { type CreateMessageOptions, type Ticket, TicketSchema } from './model';
+import {
+  StorageService,
+  ChromeStorageRepository,
+} from './services/StorageService';
+import {
+  type CreateMessageOptions,
+  type Ticket,
+  TicketSchema,
+} from './utils/model';
 import { getChangeDifferences } from './utils/getChangeDifferences';
 import { raise } from './utils/raise';
 
@@ -48,4 +55,8 @@ async function updateTicketInStore(): Promise<void> {
 }
 
 const storageService = new StorageService(ChromeStorageRepository);
+
+// chrome.alarms.create({
+//   periodInMinutes: 1 / 60
+// })
 updateTicketInStore();

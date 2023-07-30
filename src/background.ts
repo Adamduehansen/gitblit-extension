@@ -1,5 +1,8 @@
-import { ChromeStorageRepository, StorageService } from './StorageService';
-import type { CreateMessageOptions } from './model';
+import {
+  ChromeStorageRepository,
+  StorageService,
+} from './services/StorageService';
+import type { CreateMessageOptions } from './utils/model';
 
 function handleMessage(request: CreateMessageOptions) {
   chrome.notifications.create({
