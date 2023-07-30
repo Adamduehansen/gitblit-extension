@@ -1,11 +1,7 @@
-import {
-  type Ticket,
-  TicketScheme,
-  StorageService,
-  ChromeStorageRepository,
-} from './StorageService';
-import type { CreateMessageOptions } from './model';
-import { raise } from './raise';
+import { StorageService, ChromeStorageRepository } from './StorageService';
+import { type CreateMessageOptions, type Ticket, TicketSchema } from './model';
+import { getChangeDifferences } from './utils/getChangeDifferences';
+import { raise } from './utils/raise';
 
 async function sendMessageToBackground(
   createMessageOptions: CreateMessageOptions
@@ -18,7 +14,7 @@ function getTicketJson(): Ticket {
     const textContent =
       document.body.textContent ?? raise('textContent is null');
     const json = JSON.parse(textContent);
-    return TicketScheme.parse(json);
+    return TicketSchema.parse(json);
   } catch {
     throw new Error('This page does not contain JSON for a ticket!');
   }
@@ -27,19 +23,29 @@ function getTicketJson(): Ticket {
 async function updateTicketInStore(): Promise<void> {
   const ticket = getTicketJson();
 
-  const storageService = new StorageService(ChromeStorageRepository);
   const existingTicket = await storageService.getTicket(
     ticket.repository,
     ticket.number
   );
 
+  await storageService.setTicket(ticket);
+
   if (existingTicket === undefined) {
-    await storageService.setTicket(ticket);
     sendMessageToBackground({
       title: 'Ticket created!',
       message: `Ticket "${ticket.number}" is created for "${ticket.repository}"`,
     });
+    return;
+  }
+
+  const result = getChangeDifferences(existingTicket, ticket);
+  if (result.hasNewComments) {
+    sendMessageToBackground({
+      title: 'New Comment!',
+      message: `Ticket "${ticket.number}" on "${ticket.repository}" was added a comment`,
+    });
   }
 }
 
+const storageService = new StorageService(ChromeStorageRepository);
 updateTicketInStore();

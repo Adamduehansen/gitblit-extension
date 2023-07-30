@@ -1,4 +1,5 @@
-import { StorageRepository, StorageService, Ticket } from './StorageService';
+import { StorageRepository, StorageService } from './StorageService';
+import { Ticket } from './model';
 
 describe('storage', () => {
   describe('StorageService', () => {
