@@ -1,0 +1,26 @@
+{
+  "name": "Gitblit Extension",
+  "version": "1.0.0",
+  "manifest_version": 3,
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*/tickets/export/*"
+      ],
+      "js": [
+        "contentScript.js"
+      ],
+      "type": "module"
+    }
+  ],
+  "permissions": [
+    "alarms",
+    "notifications",
+    "tabs",
+    "storage"
+  ]
+}
