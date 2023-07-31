@@ -2,7 +2,9 @@ import { z } from 'zod';
 
 export type CreateMessageOptions = Required<
   Pick<chrome.notifications.NotificationOptions, 'message' | 'title'>
->;
+> & {
+  onClickUrl: string;
+};
 
 export const TicketSchema = z.object({
   repository: z.string(),

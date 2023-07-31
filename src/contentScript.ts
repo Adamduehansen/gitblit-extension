@@ -37,10 +37,13 @@ async function updateTicketInStore(): Promise<void> {
 
   await storageService.setTicket(ticket);
 
+  const ticketUrl = window.location.href.replace('export/', '');
+
   if (existingTicket === undefined) {
     sendMessageToBackground({
       title: 'Ticket created!',
       message: `Ticket "${ticket.number}" is created for "${ticket.repository}"`,
+      onClickUrl: ticketUrl,
     });
     return;
   }
@@ -50,6 +53,7 @@ async function updateTicketInStore(): Promise<void> {
     sendMessageToBackground({
       title: 'New Comment!',
       message: `Ticket "${ticket.number}" on "${ticket.repository}" was added a comment`,
+      onClickUrl: ticketUrl,
     });
   }
 }

@@ -5,7 +5,7 @@ import {
 import type { CreateMessageOptions } from './utils/model';
 
 function handleMessage(request: CreateMessageOptions) {
-  chrome.notifications.create({
+  chrome.notifications.create(request.onClickUrl.toString(), {
     iconUrl: '/images/gitblit-icon.png',
     title: request.title,
     message: request.message,
@@ -49,3 +49,10 @@ chrome.alarms.create('refresh-tabs', {
 });
 
 chrome.alarms.onAlarm.addListener(reloadGitblitTabs);
+
+chrome.notifications.onClicked.addListener((notificationId) => {
+  chrome.tabs.create({
+    active: true,
+    url: notificationId,
+  });
+});
