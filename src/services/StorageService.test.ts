@@ -13,6 +13,7 @@ describe('storage', () => {
               number: 1,
               changes: [],
               title: 'any-title',
+              url: 'any-url',
             },
           ],
           setTickets: async () => {},
@@ -67,6 +68,7 @@ describe('storage', () => {
           number: 1,
           changes: [],
           title: 'any-title',
+          url: 'any-url',
         };
         const repository: StorageRepository = {
           getTickets: async () => [ticketInStorage],
@@ -78,6 +80,7 @@ describe('storage', () => {
           number: 2,
           changes: [],
           title: 'any-title',
+          url: 'any-url',
         };
 
         // Act
@@ -99,6 +102,7 @@ describe('storage', () => {
               number: 1,
               changes: [],
               title: 'any-title',
+              url: 'any-url',
             },
           ],
           setTickets: jest.fn(),
@@ -117,6 +121,7 @@ describe('storage', () => {
             },
           ],
           title: 'any-title',
+          url: 'any-url',
         };
 
         // Act

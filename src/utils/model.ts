@@ -1,12 +1,6 @@
 import { z } from 'zod';
 
-export type CreateMessageOptions = Required<
-  Pick<chrome.notifications.NotificationOptions, 'message' | 'title'>
-> & {
-  onClickUrl: string;
-};
-
-export const TicketSchema = z.object({
+export const ticketSchema = z.object({
   repository: z.string(),
   title: z.string(),
   number: z.number(),
@@ -20,6 +14,9 @@ export const TicketSchema = z.object({
         .optional(),
     })
     .array(),
+  url: z.string(),
 });
 
-export type Ticket = z.infer<typeof TicketSchema>;
+export const ticketsSchema = z.array(ticketSchema);
+
+export type Ticket = z.infer<typeof ticketSchema>;

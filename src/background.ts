@@ -1,17 +1,8 @@
+import { handleTicketChangeInStorage } from './handlers/handleTicketChangeInStorage';
 import {
   ChromeStorageRepository,
   StorageService,
 } from './services/StorageService';
-import type { CreateMessageOptions } from './utils/model';
-
-function handleMessage(request: CreateMessageOptions) {
-  chrome.notifications.create(request.onClickUrl.toString(), {
-    iconUrl: '/images/gitblit-icon.png',
-    title: request.title,
-    message: request.message,
-    type: 'basic',
-  });
-}
 
 function initializeStorage() {
   console.log('Installing Extension!');
@@ -39,8 +30,6 @@ async function reloadGitblitTabs(alarm: chrome.alarms.Alarm) {
   });
 }
 
-chrome.runtime.onMessage.addListener(handleMessage);
-
 chrome.runtime.onInstalled.addListener(initializeStorage);
 
 chrome.alarms.create('refresh-tabs', {
@@ -51,8 +40,11 @@ chrome.alarms.create('refresh-tabs', {
 chrome.alarms.onAlarm.addListener(reloadGitblitTabs);
 
 chrome.notifications.onClicked.addListener((notificationId) => {
+  const [_, url] = notificationId.split(',');
   chrome.tabs.create({
     active: true,
-    url: notificationId,
+    url: url,
   });
 });
+
+chrome.storage.onChanged.addListener(handleTicketChangeInStorage);
