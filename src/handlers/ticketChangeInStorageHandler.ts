@@ -29,9 +29,9 @@ export const handleTicketChangeInStorage: StorageChangeHandler = function (
       return;
     }
 
+    const notificationId = `${crypto.randomUUID()},${result.ticketUrl}`;
     switch (result.type) {
       case 'NEW_TICKET':
-        const notificationId = `${crypto.randomUUID()},${result.ticketUrl}`;
         chrome.notifications.create(notificationId, {
           iconUrl: '/images/gitblit-icon.png',
           title: 'Ticket created!',
@@ -40,6 +40,12 @@ export const handleTicketChangeInStorage: StorageChangeHandler = function (
         });
         break;
       case 'NEW_COMMENT':
+        chrome.notifications.create(notificationId, {
+          iconUrl: '/images/gitblit-icon.png',
+          title: 'New comment on ticket!',
+          message: `${result.ticketRepository}/${result.ticketNumber}: "${result.commentText}"`,
+          type: 'basic',
+        });
         break;
     }
   }

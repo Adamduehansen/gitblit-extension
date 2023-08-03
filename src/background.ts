@@ -1,4 +1,4 @@
-import { handleTicketChangeInStorage } from './handlers/handleTicketChangeInStorage';
+import { handleTicketChangeInStorage } from './handlers/ticketChangeInStorageHandler';
 import { openTicketFromNotificationHandler } from './handlers/openTicketFromNotificationHandler';
 import { reloadGitblitTabs } from './handlers/reloadTabsHandler';
 import { initializeStorage } from './utils/initializeStorage';
