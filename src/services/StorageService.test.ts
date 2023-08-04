@@ -11,7 +11,7 @@ describe('storage', () => {
             {
               repository: 'any-repo',
               number: 1,
-              changes: [],
+
               title: 'any-title',
               url: 'any-url',
             },
@@ -66,7 +66,7 @@ describe('storage', () => {
         const ticketInStorage: Ticket = {
           repository: 'any-repo',
           number: 1,
-          changes: [],
+
           title: 'any-title',
           url: 'any-url',
         };
@@ -78,7 +78,7 @@ describe('storage', () => {
         const ticket: Ticket = {
           repository: 'any-repo',
           number: 2,
-          changes: [],
+
           title: 'any-title',
           url: 'any-url',
         };
@@ -100,7 +100,7 @@ describe('storage', () => {
             {
               repository: 'any-repo',
               number: 1,
-              changes: [],
+
               title: 'any-title',
               url: 'any-url',
             },
@@ -112,14 +112,6 @@ describe('storage', () => {
         const updatedTicket: Ticket = {
           repository: 'any-repo',
           number: 1,
-          changes: [
-            {
-              comment: {
-                id: 'any-id',
-                text: 'any-text',
-              },
-            },
-          ],
           title: 'any-title',
           url: 'any-url',
         };

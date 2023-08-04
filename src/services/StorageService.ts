@@ -1,7 +1,8 @@
-import { Ticket } from '../utils/model';
+import { Change, Ticket } from '../utils/model';
 
 interface LocalStorage {
   tickets: Ticket[];
+  changes: Change[];
 }
 
 export interface StorageRepository {
@@ -18,10 +19,9 @@ export const ChromeStorageRepository: StorageRepository = {
     return tickets;
   },
   setTickets: async function (tickets: Ticket[]): Promise<void> {
-    const storage: LocalStorage = {
+    await chrome.storage.local.set({
       tickets: tickets,
-    };
-    await chrome.storage.local.set(storage);
+    });
   },
 };
 
