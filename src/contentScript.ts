@@ -1,26 +1,49 @@
+import { z } from 'zod';
 import {
   StorageService,
   ChromeStorageRepository,
 } from './services/StorageService';
-import { type Ticket, ticketSchema } from './utils/model';
 import { raise } from './utils/raise';
 
-function getTicketJson(): Ticket {
+function getTicketJson(): unknown {
   try {
     const textContent =
       document.body.textContent ?? raise('textContent is null');
-    const json = JSON.parse(textContent);
-    json.url = window.location.href.replace('export/', '');
-    return ticketSchema.parse(json);
+    return JSON.parse(textContent);
   } catch {
     throw new Error('This page does not contain JSON for a ticket!');
   }
 }
 
 async function updateTicketInStore(): Promise<void> {
-  const ticket = getTicketJson();
+  const json = getTicketJson();
+
+  const gitblitTicketScheme = z.object({
+    repository: z.string(),
+    title: z.string(),
+    number: z.number(),
+    changes: z
+      .object({
+        comment: z
+          .object({
+            id: z.string(),
+            text: z.string(),
+          })
+          .optional(),
+      })
+      .array(),
+  });
+
+  const gitblitTicket = gitblitTicketScheme.parse(json);
+
   const storageService = new StorageService(ChromeStorageRepository);
-  await storageService.setTicket(ticket);
+
+  await storageService.setTicket({
+    repository: gitblitTicket.repository,
+    number: gitblitTicket.number,
+    title: gitblitTicket.title,
+    url: window.location.href.replace('export/', ''),
+  });
 }
 
 updateTicketInStore();

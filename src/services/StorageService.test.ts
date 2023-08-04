@@ -1,5 +1,5 @@
 import { StorageRepository, StorageService } from './StorageService';
-import { Ticket } from '../utils/model';
+import { Change, Ticket } from '../utils/model';
 
 describe('storage', () => {
   describe('StorageService', () => {
@@ -11,12 +11,13 @@ describe('storage', () => {
             {
               repository: 'any-repo',
               number: 1,
-
               title: 'any-title',
               url: 'any-url',
             },
           ],
           setTickets: async () => {},
+          getChanges: async () => [],
+          setChanges: async () => {},
         };
         const storageService = new StorageService(repository);
 
@@ -32,6 +33,8 @@ describe('storage', () => {
         const repository: StorageRepository = {
           getTickets: async () => [],
           setTickets: async () => {},
+          getChanges: async () => [],
+          setChanges: async () => {},
         };
         const storageService = new StorageService(repository);
 
@@ -49,6 +52,8 @@ describe('storage', () => {
         const repository: StorageRepository = {
           getTickets: async () => [],
           setTickets: jest.fn(),
+          getChanges: async () => [],
+          setChanges: async () => {},
         };
         const storageService = new StorageService(repository);
 
@@ -66,19 +71,19 @@ describe('storage', () => {
         const ticketInStorage: Ticket = {
           repository: 'any-repo',
           number: 1,
-
           title: 'any-title',
           url: 'any-url',
         };
         const repository: StorageRepository = {
           getTickets: async () => [ticketInStorage],
           setTickets: jest.fn(),
+          getChanges: async () => [],
+          setChanges: async () => {},
         };
         const storageService = new StorageService(repository);
         const ticket: Ticket = {
           repository: 'any-repo',
           number: 2,
-
           title: 'any-title',
           url: 'any-url',
         };
@@ -106,6 +111,8 @@ describe('storage', () => {
             },
           ],
           setTickets: jest.fn(),
+          getChanges: async () => [],
+          setChanges: async () => {},
         };
 
         const storageService = new StorageService(repository);
@@ -121,6 +128,32 @@ describe('storage', () => {
 
         // Assert
         expect(repository.setTickets).toHaveBeenCalledWith([updatedTicket]);
+      });
+    });
+
+    describe('addChange', () => {
+      test('should add change to storage', async () => {
+        // Arrange
+        const change: Change = {
+          repository: 'any-repository',
+          number: 1,
+          comment: 'any-comment',
+        };
+
+        const repository: StorageRepository = {
+          getTickets: async () => [],
+          setTickets: async () => {},
+          getChanges: jest.fn(async () => []),
+          setChanges: jest.fn(),
+        };
+
+        // Act
+        const storageService = new StorageService(repository);
+        await storageService.addChange(change);
+
+        // Assert
+        expect(repository.getChanges).toHaveBeenCalled();
+        expect(repository.setChanges).toHaveBeenCalledWith([change]);
       });
     });
   });

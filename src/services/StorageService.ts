@@ -8,6 +8,8 @@ interface LocalStorage {
 export interface StorageRepository {
   getTickets: () => Promise<Ticket[]>;
   setTickets: (tickets: Ticket[]) => Promise<void>;
+  setChanges: (changes: Change[]) => Promise<void>;
+  getChanges: () => Promise<Change[]>;
 }
 
 type LocalStorageKeys = keyof LocalStorage;
@@ -23,12 +25,22 @@ export const ChromeStorageRepository: StorageRepository = {
       tickets: tickets,
     });
   },
+  getChanges: async function (): Promise<Change[]> {
+    const keys: LocalStorageKeys[] = ['changes'];
+    const { changes } = await chrome.storage.local.get(keys);
+    return changes;
+  },
+  setChanges: async function (changes: Change[]): Promise<void> {
+    await chrome.storage.local.set({
+      changes: changes,
+    });
+  },
 };
 
 export class StorageService {
   constructor(private _storageRepository: StorageRepository) {}
 
-  public async getTicket(
+  async getTicket(
     repository: string,
     number: number
   ): Promise<Ticket | undefined> {
@@ -39,7 +51,7 @@ export class StorageService {
     );
   }
 
-  public async setTicket(ticket: Ticket): Promise<void> {
+  async setTicket(ticket: Ticket): Promise<void> {
     const allTickets = await this._storageRepository.getTickets();
     let existingTicketIndex = allTickets.findIndex(
       this.findExistingTicket(ticket.repository, ticket.number)
@@ -55,7 +67,12 @@ export class StorageService {
     await this._storageRepository.setTickets(allTickets);
   }
 
-  public async initializeStorage() {
+  async addChange(change: Change): Promise<void> {
+    const allChanges = await this._storageRepository.getChanges();
+    return this._storageRepository.setChanges([...allChanges, change]);
+  }
+
+  async initializeStorage() {
     await this._storageRepository.setTickets([]);
   }
 

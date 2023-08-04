@@ -1,5 +1,3 @@
-import { ticketsSchema } from '../utils/model';
-
 type StorageChangeHandler = (
   changes: {
     [key: string]: chrome.storage.StorageChange;
@@ -20,10 +18,6 @@ export const handleTicketChangeInStorage: StorageChangeHandler = function (
       return;
     }
 
-    const oldTickets = ticketsSchema.parse(oldValue);
-    const newTickets = ticketsSchema.parse(newValue);
-
-    console.log({ oldTickets });
-    console.log({ newTickets });
+    console.log('Updated tickets:', oldValue, newValue);
   }
 };
