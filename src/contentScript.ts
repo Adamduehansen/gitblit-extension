@@ -1,5 +1,6 @@
 import { raise } from './utils/raise';
 import { NewTicketMessage, Ticket, ticketScheme } from './utils/model';
+import { TicketRepository, TicketService } from './services/TicketService';
 
 function getTicketJson(): any {
   try {
@@ -16,14 +17,10 @@ async function updateTicketInStore(): Promise<void> {
   json.url = window.location.href.replace('export/', '');
   const ticket = ticketScheme.parse(json);
 
-  const { tickets } = (await chrome.storage.local.get('tickets')) as {
-    tickets: Ticket[];
-  };
-
-  const existingTicket = tickets.find(
-    (existingTicket) =>
-      existingTicket.number === ticket.number &&
-      existingTicket.repository === ticket.repository
+  const ticketService = new TicketService(TicketRepository);
+  const existingTicket = await ticketService.getTicket(
+    ticket.repository,
+    ticket.number
   );
 
   if (existingTicket === undefined) {
@@ -34,7 +31,7 @@ async function updateTicketInStore(): Promise<void> {
     chrome.runtime.sendMessage(newTicketMessage);
   }
 
-  // Further checks
+  // Further checks on existing ticket...
 }
 
 updateTicketInStore();

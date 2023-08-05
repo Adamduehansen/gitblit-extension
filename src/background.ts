@@ -1,5 +1,6 @@
 import { createGitblitTab } from './handlers/createGitblitTab';
 import { initializeStorage } from './handlers/initializeStorage';
+import { TicketRepository, TicketService } from './services/TicketService';
 import { Message, Ticket } from './utils/model';
 
 chrome.alarms.create('refresh-tabs', {
@@ -17,14 +18,11 @@ chrome.runtime.onMessage.addListener(async (message: Message) => {
     return;
   }
 
-  console.log('New ticket:', { message });
-  const { tickets } = (await chrome.storage.local.get('tickets')) as {
-    tickets: Ticket[];
-  };
-
-  chrome.storage.local.set({
-    tickets: [...tickets, message.ticket],
-  });
+  console.log('New ticket', message.ticket);
+  const ticketService = new TicketService(TicketRepository);
+  const tickets = await ticketService.getTickets();
+  await ticketService.setTickets([...tickets, message.ticket]);
+  console.log('Ticket created in storage', message.ticket);
 });
 
 chrome.runtime.onMessage.addListener((message: Message) => {
