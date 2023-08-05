@@ -1,4 +1,4 @@
-export function openTicketFromNotificationHandler(notificationId: string) {
+export function createGitblitTab(notificationId: string) {
   const [_, url] = notificationId.split(',');
   chrome.tabs.create({
     active: true,
