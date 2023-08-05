@@ -1,5 +1,5 @@
 import { createGitblitTab } from './handlers/createGitblitTab';
-import { initializeStorage } from './utils/initializeStorage';
+import { initializeStorage } from './handlers/initializeStorage';
 import { Message, Ticket } from './utils/model';
 
 chrome.alarms.create('refresh-tabs', {
