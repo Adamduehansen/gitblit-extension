@@ -1,11 +1,7 @@
-import { z } from 'zod';
-import {
-  StorageService,
-  ChromeStorageRepository,
-} from './services/StorageService';
 import { raise } from './utils/raise';
+import { Ticket, ticketScheme } from './utils/model';
 
-function getTicketJson(): unknown {
+function getTicketJson(): any {
   try {
     const textContent =
       document.body.textContent ?? raise('textContent is null');
@@ -17,33 +13,35 @@ function getTicketJson(): unknown {
 
 async function updateTicketInStore(): Promise<void> {
   const json = getTicketJson();
+  console.log(json);
 
-  const gitblitTicketScheme = z.object({
-    repository: z.string(),
-    title: z.string(),
-    number: z.number(),
-    changes: z
-      .object({
-        comment: z
-          .object({
-            id: z.string(),
-            text: z.string(),
-          })
-          .optional(),
-      })
-      .array(),
-  });
+  json.url = window.location.href.replace('export/', '');
+  const ticket = ticketScheme.parse(json);
 
-  const gitblitTicket = gitblitTicketScheme.parse(json);
+  // Add or update existing ticket in storage.
+  const { tickets } = (await chrome.storage.local.get('tickets')) as {
+    tickets: Ticket[];
+  };
 
-  const storageService = new StorageService(ChromeStorageRepository);
+  const existingTicket = tickets.findIndex(
+    (existingTicket) =>
+      existingTicket.number === ticket.number &&
+      existingTicket.repository === ticket.repository
+  );
 
-  await storageService.setTicket({
-    repository: gitblitTicket.repository,
-    number: gitblitTicket.number,
-    title: gitblitTicket.title,
-    url: window.location.href.replace('export/', ''),
-  });
+  // Ticket does not already exist
+  if (existingTicket < 0) {
+    // Add ticket to all tickets.
+    await chrome.storage.local.set({
+      tickets: [...tickets, ticket],
+    });
+  } else {
+    // Update ticket in store.
+    tickets[existingTicket] = ticket;
+    await chrome.storage.local.set({
+      tickets: [...tickets],
+    });
+  }
 }
 
 updateTicketInStore();
