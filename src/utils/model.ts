@@ -6,5 +6,8 @@ export type Ticket = {
 };
 
 export type Change = Pick<Ticket, 'repository' | 'number'> & {
-  comment?: string;
+  comment?: {
+    id: string;
+    text: string;
+  };
 };

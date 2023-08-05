@@ -137,7 +137,10 @@ describe('storage', () => {
         const change: Change = {
           repository: 'any-repository',
           number: 1,
-          comment: 'any-comment',
+          comment: {
+            id: 'any-comment-id',
+            text: 'any-text',
+          },
         };
 
         const repository: StorageRepository = {
