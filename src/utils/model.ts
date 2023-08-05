@@ -16,5 +16,18 @@ export const ticketScheme = z.object({
     .array(),
   url: z.string(),
 });
-
 export type Ticket = z.infer<typeof ticketScheme>;
+
+export const ticketsScheme = ticketScheme.array();
+export type Tickets = z.infer<typeof ticketsScheme>;
+
+export type NewTicketMessage = {
+  type: 'NEW_TICKET';
+  ticket: Ticket;
+};
+
+export type NewCommentMessage = {
+  type: 'NEW_COMMENT';
+};
+
+export type Message = NewTicketMessage | NewCommentMessage;
