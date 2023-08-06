@@ -28,6 +28,9 @@ export type NewTicketMessage = {
 
 export type NewCommentMessage = {
   type: 'NEW_COMMENT';
+  ticketRepository: string;
+  ticketNumber: number;
+  comment: string;
 };
 
 export type Message = NewTicketMessage | NewCommentMessage;

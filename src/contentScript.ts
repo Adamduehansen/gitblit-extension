@@ -1,5 +1,9 @@
 import { raise } from './utils/raise';
-import { NewTicketMessage, Ticket, ticketScheme } from './utils/model';
+import {
+  NewCommentMessage,
+  NewTicketMessage,
+  ticketScheme,
+} from './utils/model';
 import { TicketRepository, TicketService } from './services/TicketService';
 
 function getTicketJson(): any {
@@ -29,9 +33,26 @@ async function updateTicketInStore(): Promise<void> {
       ticket: ticket,
     };
     chrome.runtime.sendMessage(newTicketMessage);
+    return;
   }
 
-  // Further checks on existing ticket...
+  const amountOfChanges = ticket.changes.length - existingTicket.changes.length;
+  if (amountOfChanges < 0) {
+    return;
+  }
+
+  const changes = ticket.changes.splice(-amountOfChanges);
+  for (const change of changes) {
+    if (change.comment !== undefined) {
+      const newCommentMessage: NewCommentMessage = {
+        type: 'NEW_COMMENT',
+        ticketRepository: ticket.repository,
+        ticketNumber: ticket.number,
+        comment: change.comment.text,
+      };
+      chrome.runtime.sendMessage(newCommentMessage);
+    }
+  }
 }
 
 updateTicketInStore();
