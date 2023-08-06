@@ -28,31 +28,22 @@ async function updateTicketInStore(): Promise<void> {
   );
 
   if (existingTicket === undefined) {
-    const newTicketMessage: NewTicketMessage = {
-      type: 'NEW_TICKET',
-      ticket: ticket,
-    };
-    chrome.runtime.sendMessage(newTicketMessage);
+    ticketService.addTicket(ticket);
+    // changeService.addChanges(ticket.repository, ticket.number, ticket.changes);
     return;
   }
 
-  const amountOfChanges = ticket.changes.length - existingTicket.changes.length;
-  if (amountOfChanges < 0) {
-    return;
-  }
+  // const amountOfChanges = ticket.changes.length - existingTicket.changes.length;
+  // if (amountOfChanges < 0) {
+  //   return;
+  // }
 
-  const changes = ticket.changes.splice(-amountOfChanges);
-  for (const change of changes) {
-    if (change.comment !== undefined) {
-      const newCommentMessage: NewCommentMessage = {
-        type: 'NEW_COMMENT',
-        ticketRepository: ticket.repository,
-        ticketNumber: ticket.number,
-        comment: change.comment.text,
-      };
-      chrome.runtime.sendMessage(newCommentMessage);
-    }
-  }
+  // const changes = ticket.changes.splice(-amountOfChanges);
+  // for (const change of changes) {
+  //   if (change.comment !== undefined) {
+  //     changeService.addChange(ticket.repository, ticket.number, change);
+  //   }
+  // }
 }
 
 updateTicketInStore();

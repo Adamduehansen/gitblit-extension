@@ -1,4 +1,9 @@
-import { Ticket } from '../utils/model';
+interface Ticket {
+  repository: string;
+  number: number;
+  title: string;
+  url: string;
+}
 
 export interface TicketRepository {
   getTickets: () => Promise<Ticket[]>;
@@ -32,11 +37,8 @@ export class TicketService {
     );
   }
 
-  async getTickets(): Promise<Ticket[]> {
-    return this._ticketRepository.getTickets();
-  }
-
-  async setTickets(tickets: Ticket[]): Promise<void> {
-    return this._ticketRepository.setTickets(tickets);
+  async addTicket(ticket: Ticket): Promise<void> {
+    const allTickets = await this._ticketRepository.getTickets();
+    await this._ticketRepository.setTickets([...allTickets, ticket]);
   }
 }
