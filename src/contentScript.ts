@@ -68,9 +68,9 @@ async function updateTicketInStore(): Promise<void> {
     return;
   }
 
-  const changes = ticket.changes.slice(-amountOfChanges);
+  const newChanges = ticket.changes.slice(-amountOfChanges);
 
-  for (const change of changes) {
+  for (const change of newChanges) {
     if (isCommentChange(change)) {
       console.log('New comment', change.comment);
     }

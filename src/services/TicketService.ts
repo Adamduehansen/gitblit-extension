@@ -50,8 +50,6 @@ export class TicketService {
         ticketInStorage.repository === ticket.repository &&
         ticketInStorage.number === ticket.number
     );
-    console.log(indexOfTicketToUpdate);
-
     allTickets[indexOfTicketToUpdate] = ticket;
     await this._ticketRepository.setTickets([...allTickets]);
   }
