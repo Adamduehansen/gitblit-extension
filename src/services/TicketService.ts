@@ -38,7 +38,7 @@ export class TicketService {
     );
   }
 
-  async addTicket(ticket: Ticket): Promise<void> {
+  async createTicket(ticket: Ticket): Promise<void> {
     const allTickets = await this._ticketRepository.getTickets();
     await this._ticketRepository.setTickets([...allTickets, ticket]);
   }

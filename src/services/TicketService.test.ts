@@ -51,7 +51,7 @@ describe('TicketService', () => {
       };
 
       // Act
-      await ticketService.addTicket(ticketToAdd);
+      await ticketService.createTicket(ticketToAdd);
 
       // Assert
       expect(ticketRepository.setTickets).toHaveBeenCalledWith([

@@ -51,7 +51,7 @@ async function updateTicketInStore(): Promise<void> {
   );
 
   if (existingTicket === undefined) {
-    ticketService.addTicket({
+    ticketService.createTicket({
       repository: ticket.repository,
       number: ticket.number,
       title: ticket.title,
