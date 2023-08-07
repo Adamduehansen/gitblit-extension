@@ -1,5 +1,4 @@
-import { Ticket } from '../utils/model';
-import { TicketRepository, TicketService } from './TicketService';
+import { Ticket, TicketRepository, TicketService } from './TicketService';
 
 describe('TicketService', () => {
   describe('getTicket', () => {
@@ -9,8 +8,8 @@ describe('TicketService', () => {
         repository: 'any-repo',
         number: 1,
         title: 'any-title',
-        changes: [],
         url: 'any-url',
+        numberOfChanges: 0,
       };
       const ticketRepository: TicketRepository = {
         getTickets: async () => [ticketInStorage],
@@ -34,8 +33,8 @@ describe('TicketService', () => {
         repository: 'any-repo',
         number: 1,
         title: 'any-title',
-        changes: [],
         url: 'any-url',
+        numberOfChanges: 0,
       };
       const ticketRepository: TicketRepository = {
         getTickets: jest.fn(async () => [ticketInStorage]),
@@ -47,8 +46,8 @@ describe('TicketService', () => {
         repository: 'any-repo',
         number: 2,
         title: 'any-title',
-        changes: [],
         url: 'any-url',
+        numberOfChanges: 0,
       };
 
       // Act
@@ -59,6 +58,38 @@ describe('TicketService', () => {
         ticketInStorage,
         ticketToAdd,
       ]);
+    });
+  });
+
+  describe('updateTicket', () => {
+    test('should update ticket in storage', async () => {
+      // Arrange
+      const ticketInStorage: Ticket = {
+        repository: 'any-repo',
+        number: 1,
+        title: 'any-title',
+        url: 'any-url',
+        numberOfChanges: 0,
+      };
+      const ticketRepository: TicketRepository = {
+        getTickets: async () => [ticketInStorage],
+        setTickets: jest.fn(),
+      };
+      const ticketService = new TicketService(ticketRepository);
+
+      const updatedTicket: Ticket = {
+        repository: 'any-repo',
+        number: 1,
+        title: 'any-title',
+        url: 'any-url',
+        numberOfChanges: 1,
+      };
+
+      // Act
+      await ticketService.updateTicket(updatedTicket);
+
+      // Assert
+      expect(ticketRepository.setTickets([updatedTicket]));
     });
   });
 });

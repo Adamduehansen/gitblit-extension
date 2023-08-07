@@ -1,12 +1,24 @@
+import { z } from 'zod';
 import { raise } from './utils/raise';
-import {
-  NewCommentMessage,
-  NewTicketMessage,
-  ticketScheme,
-} from './utils/model';
 import { TicketRepository, TicketService } from './services/TicketService';
 
-function getTicketJson(): any {
+const ticketScheme = z.object({
+  repository: z.string(),
+  title: z.string(),
+  number: z.number(),
+  changes: z
+    .object({
+      comment: z
+        .object({
+          id: z.string(),
+          text: z.string(),
+        })
+        .optional(),
+    })
+    .array(),
+});
+
+function getTicketJson(): unknown {
   try {
     const textContent =
       document.body.textContent ?? raise('textContent is null');
@@ -16,34 +28,61 @@ function getTicketJson(): any {
   }
 }
 
+interface CommentChange {
+  comment: {
+    id: string;
+    text: string;
+  };
+}
+
+function isCommentChange(change: unknown): change is CommentChange {
+  return typeof change === 'object' && change !== null && 'comment' in change;
+}
+
 async function updateTicketInStore(): Promise<void> {
   const json = getTicketJson();
-  json.url = window.location.href.replace('export/', '');
   const ticket = ticketScheme.parse(json);
 
   const ticketService = new TicketService(TicketRepository);
+
   const existingTicket = await ticketService.getTicket(
     ticket.repository,
     ticket.number
   );
 
   if (existingTicket === undefined) {
-    ticketService.addTicket(ticket);
-    // changeService.addChanges(ticket.repository, ticket.number, ticket.changes);
+    ticketService.addTicket({
+      repository: ticket.repository,
+      number: ticket.number,
+      title: ticket.title,
+      url: window.location.href.replace('export/', ''),
+      numberOfChanges: ticket.changes.length,
+    });
     return;
   }
 
-  // const amountOfChanges = ticket.changes.length - existingTicket.changes.length;
-  // if (amountOfChanges < 0) {
-  //   return;
-  // }
+  const amountOfChanges =
+    ticket.changes.length - existingTicket.numberOfChanges;
 
-  // const changes = ticket.changes.splice(-amountOfChanges);
-  // for (const change of changes) {
-  //   if (change.comment !== undefined) {
-  //     changeService.addChange(ticket.repository, ticket.number, change);
-  //   }
-  // }
+  if (amountOfChanges <= 0) {
+    return;
+  }
+
+  const changes = ticket.changes.slice(-amountOfChanges);
+
+  for (const change of changes) {
+    if (isCommentChange(change)) {
+      console.log('New comment', change.comment);
+    }
+  }
+
+  await ticketService.updateTicket({
+    repository: ticket.repository,
+    number: ticket.number,
+    title: ticket.title,
+    url: window.location.href.replace('export/', ''),
+    numberOfChanges: ticket.changes.length,
+  });
 }
 
 updateTicketInStore();

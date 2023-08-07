@@ -1,8 +1,9 @@
-interface Ticket {
+export interface Ticket {
   repository: string;
   number: number;
   title: string;
   url: string;
+  numberOfChanges: number;
 }
 
 export interface TicketRepository {
@@ -40,5 +41,18 @@ export class TicketService {
   async addTicket(ticket: Ticket): Promise<void> {
     const allTickets = await this._ticketRepository.getTickets();
     await this._ticketRepository.setTickets([...allTickets, ticket]);
+  }
+
+  async updateTicket(ticket: Ticket): Promise<void> {
+    const allTickets = await this._ticketRepository.getTickets();
+    const indexOfTicketToUpdate = allTickets.findIndex(
+      (ticketInStorage) =>
+        ticketInStorage.repository === ticket.repository &&
+        ticketInStorage.number === ticket.number
+    );
+    console.log(indexOfTicketToUpdate);
+
+    allTickets[indexOfTicketToUpdate] = ticket;
+    await this._ticketRepository.setTickets([...allTickets]);
   }
 }
