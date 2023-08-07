@@ -7,6 +7,7 @@ module.exports = {
   entry: {
     contentScript: './src/contentScript.ts',
     background: './src/background.ts',
+    popup: './src/popup.ts',
   },
   module: {
     rules: [
@@ -28,6 +29,7 @@ module.exports = {
     new CopyPlugin({
       patterns: [
         './assets/manifest.json',
+        './assets/popup.html',
         {
           from: './assets/images',
           to: 'images',

@@ -17,10 +17,14 @@
       "type": "module"
     }
   ],
+  "action": {
+    "default_popup": "popup.html"
+  },
   "permissions": [
     "alarms",
     "notifications",
     "tabs",
+    "tabGroups",
     "storage"
   ]
 }

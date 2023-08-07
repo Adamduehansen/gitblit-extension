@@ -1,11 +1,12 @@
 import { createGitblitTab } from './handlers/createGitblitTab';
 import { initializeStorage } from './handlers/initializeStorage';
+import { reloadGitblitTabs } from './handlers/reloadTabsHandler';
 
 chrome.alarms.create('refresh-tabs', {
   periodInMinutes: 1 / 2,
   delayInMinutes: 1 / 10,
 });
-// chrome.alarms.onAlarm.addListener(reloadGitblitTabs);
+chrome.alarms.onAlarm.addListener(reloadGitblitTabs);
 
 chrome.notifications.onClicked.addListener(createGitblitTab);
 
