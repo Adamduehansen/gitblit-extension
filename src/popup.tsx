@@ -1,9 +1,23 @@
 import { JSX, render } from 'preact';
-import { TicketRepository, TicketService } from './services/TicketService';
+import { useEffect, useState } from 'preact/hooks';
+import {
+  Ticket,
+  TicketRepository,
+  TicketService,
+} from './services/TicketService';
+
+const ticketService = new TicketService(TicketRepository);
 
 function Popup(): JSX.Element {
+  const [tickets, setTickets] = useState<Ticket[]>([]);
+
+  useEffect(() => {
+    ticketService.getTickets().then((tickets) => {
+      setTickets(tickets);
+    });
+  }, []);
+
   async function onOpenAllClicked(): Promise<void> {
-    const ticketService = new TicketService(TicketRepository);
     const tickets = await ticketService.getTickets();
 
     let tabIds: number[] = [];
@@ -24,16 +38,35 @@ function Popup(): JSX.Element {
       tabIds: tabIds,
     });
 
-    chrome.tabGroups.update(tabGroup, {
+    await chrome.tabGroups.update(tabGroup, {
       title: 'Gitblit Extension Group',
       collapsed: true,
     });
   }
 
   return (
-    <div>
-      <button onClick={onOpenAllClicked}>Open all</button>
-    </div>
+    <>
+      <header>
+        <h1>Gitblit Extension</h1>
+      </header>
+      <main>
+        <ul>
+          {tickets.map((ticket) => {
+            return (
+              <li>
+                <a href={ticket.ticketUrl} target='_blank'>
+                  <h2>{ticket.title}</h2>
+                  <div>
+                    {ticket.repository}: {ticket.number}
+                  </div>
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+        <button onClick={onOpenAllClicked}>Create tab group</button>
+      </main>
+    </>
   );
 }
 
