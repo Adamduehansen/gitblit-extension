@@ -54,4 +54,8 @@ export class TicketService {
     allTickets[indexOfTicketToUpdate] = ticket;
     await this._ticketRepository.setTickets([...allTickets]);
   }
+
+  async getTickets(): Promise<Ticket[]> {
+    return this._ticketRepository.getTickets();
+  }
 }

@@ -97,4 +97,39 @@ describe('TicketService', () => {
       expect(ticketRepository.setTickets([updatedTicket]));
     });
   });
+
+  describe('getTickets', () => {
+    test('should get all tickets in storage', async () => {
+      // Arrange
+      const ticketsInStorage: Ticket[] = [
+        {
+          repository: 'any-repo',
+          number: 1,
+          title: 'any-title',
+          ticketUrl: 'any-ticket-url',
+          jsonUrl: 'any-json-url',
+          numberOfChanges: 0,
+        },
+        {
+          repository: 'any-repo',
+          number: 2,
+          title: 'any-title',
+          ticketUrl: 'any-ticket-url',
+          jsonUrl: 'any-json-url',
+          numberOfChanges: 0,
+        },
+      ];
+      const ticketRepository: TicketRepository = {
+        getTickets: async () => ticketsInStorage,
+        setTickets: jest.fn(),
+      };
+      const ticketService = new TicketService(ticketRepository);
+
+      // Act
+      const tickets = await ticketService.getTickets();
+
+      // Assert
+      expect(tickets).toEqual(ticketsInStorage);
+    });
+  });
 });
