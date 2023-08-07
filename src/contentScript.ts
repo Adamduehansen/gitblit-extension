@@ -55,7 +55,8 @@ async function updateTicketInStore(): Promise<void> {
       repository: ticket.repository,
       number: ticket.number,
       title: ticket.title,
-      url: window.location.href.replace('export/', ''),
+      ticketUrl: window.location.href.replace('export/', ''),
+      jsonUrl: window.location.href,
       numberOfChanges: ticket.changes.length,
     });
     return;
@@ -80,7 +81,8 @@ async function updateTicketInStore(): Promise<void> {
     repository: ticket.repository,
     number: ticket.number,
     title: ticket.title,
-    url: window.location.href.replace('export/', ''),
+    ticketUrl: window.location.href.replace('export/', ''),
+    jsonUrl: window.location.href,
     numberOfChanges: ticket.changes.length,
   });
 }

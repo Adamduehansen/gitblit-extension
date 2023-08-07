@@ -8,7 +8,8 @@ describe('TicketService', () => {
         repository: 'any-repo',
         number: 1,
         title: 'any-title',
-        url: 'any-url',
+        ticketUrl: 'any-ticket-url',
+        jsonUrl: 'any-json-url',
         numberOfChanges: 0,
       };
       const ticketRepository: TicketRepository = {
@@ -33,7 +34,8 @@ describe('TicketService', () => {
         repository: 'any-repo',
         number: 1,
         title: 'any-title',
-        url: 'any-url',
+        ticketUrl: 'any-ticket-url',
+        jsonUrl: 'any-json-url',
         numberOfChanges: 0,
       };
       const ticketRepository: TicketRepository = {
@@ -46,7 +48,8 @@ describe('TicketService', () => {
         repository: 'any-repo',
         number: 2,
         title: 'any-title',
-        url: 'any-url',
+        ticketUrl: 'any-ticket-url',
+        jsonUrl: 'any-json-url',
         numberOfChanges: 0,
       };
 
@@ -68,7 +71,8 @@ describe('TicketService', () => {
         repository: 'any-repo',
         number: 1,
         title: 'any-title',
-        url: 'any-url',
+        ticketUrl: 'any-ticket-url',
+        jsonUrl: 'any-json-url',
         numberOfChanges: 0,
       };
       const ticketRepository: TicketRepository = {
@@ -81,7 +85,8 @@ describe('TicketService', () => {
         repository: 'any-repo',
         number: 1,
         title: 'any-title',
-        url: 'any-url',
+        ticketUrl: 'any-ticket-url',
+        jsonUrl: 'any-json-url',
         numberOfChanges: 1,
       };
 

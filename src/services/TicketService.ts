@@ -2,7 +2,8 @@ export interface Ticket {
   repository: string;
   number: number;
   title: string;
-  url: string;
+  ticketUrl: string;
+  jsonUrl: string;
   numberOfChanges: number;
 }
 
