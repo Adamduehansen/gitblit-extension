@@ -44,26 +44,42 @@ function Popup(): JSX.Element {
     });
   }
 
+  function removeTicket(
+    repository: string,
+    number: number
+  ): () => Promise<void> {
+    return async function () {
+      await ticketService.removeTicket(repository, number);
+      const updatedTickets = await ticketService.getTickets();
+      setTickets(updatedTickets);
+    };
+  }
+
   return (
     <>
       <header>
         <h1>Gitblit Extension</h1>
       </header>
       <main>
-        <ul>
+        <section>
+          <h2>Tickets</h2>
           {tickets.map((ticket) => {
             return (
-              <li>
-                <a href={ticket.ticketUrl} target='_blank'>
-                  <h2>{ticket.title}</h2>
-                  <div>
-                    {ticket.repository}: {ticket.number}
-                  </div>
-                </a>
-              </li>
+              <details>
+                <summary>
+                  <a href={ticket.ticketUrl} target='_blank'>
+                    {ticket.repository}/{ticket.number}: {ticket.title}
+                  </a>
+                  <button
+                    onClick={removeTicket(ticket.repository, ticket.number)}
+                  >
+                    ✕
+                  </button>
+                </summary>
+              </details>
             );
           })}
-        </ul>
+        </section>
         <button onClick={onOpenAllClicked}>Create tab group</button>
       </main>
     </>

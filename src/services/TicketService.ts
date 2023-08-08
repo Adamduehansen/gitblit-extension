@@ -58,4 +58,21 @@ export class TicketService {
   async getTickets(): Promise<Ticket[]> {
     return this._ticketRepository.getTickets();
   }
+
+  async removeTicket(repository: string, number: number): Promise<void> {
+    const allTickets = await this._ticketRepository.getTickets();
+    const updatedTickets = allTickets.filter((ticket) => {
+      if (ticket.repository !== repository) {
+        return true;
+      }
+
+      if (ticket.number !== number) {
+        return true;
+      }
+
+      return false;
+    });
+
+    return this._ticketRepository.setTickets([...updatedTickets]);
+  }
 }

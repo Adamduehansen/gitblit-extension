@@ -132,4 +132,52 @@ describe('TicketService', () => {
       expect(tickets).toEqual(ticketsInStorage);
     });
   });
+
+  describe('removeTicket', () => {
+    test('should remove ticket from storage', async () => {
+      // Arrange
+      const currentTicketsInStorage: Ticket[] = [
+        {
+          repository: 'any-repo',
+          number: 1,
+          title: 'any-title',
+          ticketUrl: 'any-ticket-url',
+          jsonUrl: 'any-json-url',
+          numberOfChanges: 0,
+        },
+        {
+          repository: 'any-repo',
+          number: 2,
+          title: 'any-title',
+          ticketUrl: 'any-ticket-url',
+          jsonUrl: 'any-json-url',
+          numberOfChanges: 0,
+        },
+      ];
+      const ticketRepository: TicketRepository = {
+        getTickets: async () => currentTicketsInStorage,
+        setTickets: jest.fn(),
+      };
+      const ticketService = new TicketService(ticketRepository);
+
+      const expectedTicketsInStorage: Ticket[] = [
+        {
+          repository: 'any-repo',
+          number: 1,
+          title: 'any-title',
+          ticketUrl: 'any-ticket-url',
+          jsonUrl: 'any-json-url',
+          numberOfChanges: 0,
+        },
+      ];
+
+      // Act
+      await ticketService.removeTicket('any-repo', 2);
+
+      // Assert
+      expect(ticketRepository.setTickets).toHaveBeenCalledWith(
+        expectedTicketsInStorage
+      );
+    });
+  });
 });
