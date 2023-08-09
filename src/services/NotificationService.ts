@@ -1,6 +1,5 @@
 export type Notification = {
   id: string;
-  type: 'NEW_TICKET' | 'COMMENT_CHANGE';
   title: string;
   message: string;
   pushed: boolean;
@@ -30,7 +29,7 @@ export class NotificationService {
   constructor(private _notificationRepository: NotificationRepository) {}
 
   async createNotification(
-    notification: Omit<Notification, 'id'>
+    notification: Pick<Notification, 'title' | 'message'>
   ): Promise<void> {
     const notifications = await this._notificationRepository.getNotifications();
     const updatedNotifications: Notification[] = [
@@ -38,6 +37,8 @@ export class NotificationService {
       {
         ...notification,
         id: crypto.randomUUID(),
+        read: false,
+        pushed: false,
       },
     ];
     return this._notificationRepository.setNotifications(updatedNotifications);

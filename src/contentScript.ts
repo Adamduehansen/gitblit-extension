@@ -65,11 +65,8 @@ async function updateTicketInStore(): Promise<void> {
       numberOfChanges: ticket.changes.length,
     });
     notificationService.createNotification({
-      type: 'NEW_TICKET',
       title: 'New ticket!',
       message: `${ticket.repository}/${ticket.number} has been registered.`,
-      pushed: false,
-      read: false,
     });
     return;
   }
@@ -85,7 +82,10 @@ async function updateTicketInStore(): Promise<void> {
 
   for (const change of newChanges) {
     if (isCommentChange(change)) {
-      console.log('New comment', change.comment);
+      notificationService.createNotification({
+        title: `${ticket.repository}/${ticket.number}: New comment!`,
+        message: change.comment.text,
+      });
     }
   }
 
