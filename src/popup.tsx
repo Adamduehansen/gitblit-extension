@@ -1,19 +1,32 @@
 import { JSX, render } from 'preact';
-import { useEffect, useState } from 'preact/hooks';
+import { useEffect, useRef, useState } from 'preact/hooks';
 import {
   Ticket,
   TicketRepository,
   TicketService,
 } from './services/TicketService';
+import {
+  Notification,
+  NotificationService,
+  notificationRepository,
+} from './services/NotificationService';
 
 const ticketService = new TicketService(TicketRepository);
+const notificationService = new NotificationService(notificationRepository);
 
 function Popup(): JSX.Element {
   const [tickets, setTickets] = useState<Ticket[]>([]);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+
+  const detailsRef = useRef<HTMLDetailsElement>(null);
 
   useEffect(() => {
     ticketService.getTickets().then((tickets) => {
       setTickets(tickets);
+    });
+
+    notificationService.getNotifications().then((notifications) => {
+      setNotifications(notifications);
     });
   }, []);
 
@@ -65,7 +78,12 @@ function Popup(): JSX.Element {
           <h2>Tickets</h2>
           {tickets.map((ticket) => {
             return (
-              <details>
+              <details
+                onToggle={() => {
+                  console.log(detailsRef.current?.open);
+                }}
+                ref={detailsRef}
+              >
                 <summary>
                   <a href={ticket.ticketUrl} target='_blank'>
                     {ticket.repository}/{ticket.number}: {ticket.title}
@@ -76,6 +94,17 @@ function Popup(): JSX.Element {
                     ✕
                   </button>
                 </summary>
+                <ul>
+                  {notifications
+                    .filter(
+                      (notification) =>
+                        notification.ticketRepository === ticket.repository &&
+                        notification.ticketNumber === ticket.number
+                    )
+                    .map((notification) => {
+                      return <li>{notification.message}</li>;
+                    })}
+                </ul>
               </details>
             );
           })}

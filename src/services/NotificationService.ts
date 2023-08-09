@@ -4,6 +4,8 @@ export type Notification = {
   message: string;
   pushed: boolean;
   read: boolean;
+  ticketRepository: string;
+  ticketNumber: number;
 };
 
 type NotificationRepository = {
@@ -29,7 +31,10 @@ export class NotificationService {
   constructor(private _notificationRepository: NotificationRepository) {}
 
   async createNotification(
-    notification: Pick<Notification, 'title' | 'message'>
+    notification: Pick<
+      Notification,
+      'title' | 'message' | 'ticketRepository' | 'ticketNumber'
+    >
   ): Promise<void> {
     const notifications = await this._notificationRepository.getNotifications();
     const updatedNotifications: Notification[] = [
@@ -51,5 +56,9 @@ export class NotificationService {
     );
     notifications[indexOfNotification].pushed = true;
     return this._notificationRepository.setNotifications([...notifications]);
+  }
+
+  async getNotifications(): Promise<Notification[]> {
+    return this._notificationRepository.getNotifications();
   }
 }

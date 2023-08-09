@@ -14,7 +14,7 @@ chrome.alarms.create('refresh-tabs', {
 
 chrome.alarms.onAlarm.addListener(reloadGitblitTabs);
 
-chrome.notifications.onClicked.addListener(createGitblitTab);
+// chrome.notifications.onClicked.addListener(createGitblitTab);
 
 chrome.runtime.onInstalled.addListener(initializeStorage);
 

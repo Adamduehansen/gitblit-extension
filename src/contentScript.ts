@@ -67,6 +67,8 @@ async function updateTicketInStore(): Promise<void> {
     notificationService.createNotification({
       title: 'New ticket!',
       message: `${ticket.repository}/${ticket.number} has been registered.`,
+      ticketRepository: ticket.repository,
+      ticketNumber: ticket.number,
     });
     return;
   }
@@ -85,6 +87,8 @@ async function updateTicketInStore(): Promise<void> {
       notificationService.createNotification({
         title: `${ticket.repository}/${ticket.number}: New comment!`,
         message: change.comment.text,
+        ticketRepository: ticket.repository,
+        ticketNumber: ticket.number,
       });
     }
   }
