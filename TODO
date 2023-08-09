@@ -1,4 +1,18 @@
-
+version 1.0.0:
+  ☐ Popup "details" shows notification badge.
+  ☐ Action badge text should show number of notifications.
+  ☐ Set all notifications to read when details expands.
+  ☐ Detect new pushes to ticket.
+  ☐ Detect ticket status change.
+  ☐ Better component design.
+  ☐ Action icons.
+  
 Todo:
+  ☐ Move Gitblit JSON tab to group if it exists.
+  ☐ Click on notification should open ticket.
+
+misc:
   ☐ Can tickets be created only when tabs are created?
-  ✔ Should find a better handling of new comment! @done(23-08-08 09:45)
+
+Archive:
+  ✔ Should find a better handling of new comment! @done(23-08-08 09:45) @project(Todo)
