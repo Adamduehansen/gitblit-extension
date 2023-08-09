@@ -19,5 +19,14 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
       { oldValue },
       { newValue }
     );
+
+    if (key === 'notifications') {
+      chrome.notifications.create({
+        iconUrl: './images/gitblit-icon.png',
+        title: 'Notification title',
+        message: 'Notification message',
+        type: 'basic',
+      });
+    }
   }
 });

@@ -1,6 +1,10 @@
 import { z } from 'zod';
 import { raise } from './utils/raise';
 import { TicketRepository, TicketService } from './services/TicketService';
+import {
+  NotificationService,
+  notificationRepository,
+} from './services/NotificationService';
 
 const ticketScheme = z.object({
   repository: z.string(),
@@ -44,6 +48,7 @@ async function updateTicketInStore(): Promise<void> {
   const ticket = ticketScheme.parse(json);
 
   const ticketService = new TicketService(TicketRepository);
+  const notificationService = new NotificationService(notificationRepository);
 
   const existingTicket = await ticketService.getTicket(
     ticket.repository,
@@ -58,6 +63,13 @@ async function updateTicketInStore(): Promise<void> {
       ticketUrl: window.location.href.replace('export/', ''),
       jsonUrl: window.location.href,
       numberOfChanges: ticket.changes.length,
+    });
+    notificationService.createNotification({
+      type: 'NEW_TICKET',
+      title: 'New ticket!',
+      message: `${ticket.repository}/${ticket.number} has been registered.`,
+      pushed: false,
+      read: false,
     });
     return;
   }
