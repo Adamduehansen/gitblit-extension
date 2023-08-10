@@ -1,5 +1,5 @@
 version 1.0.0:
-  ☐ Popup "details" shows notification badge.
+  ✔ Popup "details" shows notification badge. @done(23-08-10 07:36)
   ☐ Action badge text should show number of notifications.
   ☐ Set all notifications to read when details expands.
   ☐ Detect new pushes to ticket.
