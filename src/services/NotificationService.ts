@@ -58,6 +58,15 @@ export class NotificationService {
     return this._notificationRepository.setNotifications([...notifications]);
   }
 
+  async setRead(notificationId: string): Promise<void> {
+    const notifications = await this._notificationRepository.getNotifications();
+    const indexOfNotification = notifications.findIndex(
+      (notification) => notification.id === notificationId
+    );
+    notifications[indexOfNotification].read = true;
+    return this._notificationRepository.setNotifications([...notifications]);
+  }
+
   async getNotifications(): Promise<Notification[]> {
     return this._notificationRepository.getNotifications();
   }

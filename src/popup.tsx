@@ -89,7 +89,9 @@ function Popup(): JSX.Element {
             return (
               <details
                 onToggle={() => {
-                  console.log(detailsRef.current?.open);
+                  notificationsForTicket.forEach((notification) => {
+                    notificationService.setRead(notification.id);
+                  });
                 }}
                 ref={detailsRef}
               >
