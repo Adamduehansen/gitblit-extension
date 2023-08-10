@@ -77,6 +77,15 @@ function Popup(): JSX.Element {
         <section>
           <h2>Tickets</h2>
           {tickets.map((ticket) => {
+            const notificationsForTicket = notifications.filter(
+              (notification) =>
+                notification.ticketRepository === ticket.repository &&
+                notification.ticketNumber === ticket.number
+            );
+            const hasUnreadNotification = notificationsForTicket.some(
+              (notification) => !notification.read
+            );
+
             return (
               <details
                 onToggle={() => {
@@ -86,6 +95,7 @@ function Popup(): JSX.Element {
               >
                 <summary>
                   <a href={ticket.ticketUrl} target='_blank'>
+                    {hasUnreadNotification && <span>*</span>}{' '}
                     {ticket.repository}/{ticket.number}: {ticket.title}
                   </a>
                   <button
@@ -95,15 +105,9 @@ function Popup(): JSX.Element {
                   </button>
                 </summary>
                 <ul>
-                  {notifications
-                    .filter(
-                      (notification) =>
-                        notification.ticketRepository === ticket.repository &&
-                        notification.ticketNumber === ticket.number
-                    )
-                    .map((notification) => {
-                      return <li>{notification.message}</li>;
-                    })}
+                  {notificationsForTicket.map((notification) => {
+                    return <li>{notification.message}</li>;
+                  })}
                 </ul>
               </details>
             );
