@@ -4,12 +4,12 @@ import {
   Ticket,
   TicketRepository,
   TicketService,
-} from './services/TicketService';
+} from '../services/TicketService';
 import {
   Notification,
   NotificationService,
   notificationRepository,
-} from './services/NotificationService';
+} from '../services/NotificationService';
 
 const ticketService = new TicketService(TicketRepository);
 const notificationService = new NotificationService(notificationRepository);
