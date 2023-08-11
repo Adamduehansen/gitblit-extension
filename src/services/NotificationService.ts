@@ -67,7 +67,19 @@ export class NotificationService {
     return this._notificationRepository.setNotifications([...notifications]);
   }
 
-  async getNotifications(): Promise<Notification[]> {
-    return this._notificationRepository.getNotifications();
+  async getNotifications(
+    ticketRepository?: string,
+    ticketNumber?: number
+  ): Promise<Notification[]> {
+    const notifications = await this._notificationRepository.getNotifications();
+    if (ticketRepository === undefined || ticketNumber === undefined) {
+      return notifications;
+    }
+
+    return notifications.filter(
+      (notification) =>
+        notification.ticketRepository === ticketRepository &&
+        notification.ticketNumber === ticketNumber
+    );
   }
 }

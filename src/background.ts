@@ -39,6 +39,12 @@ function handleNotificationChanges(key: string, notifications: Notification[]) {
 
     notificationService.setPushed(notification.id);
   }
+
+  chrome.action.setBadgeText({
+    text: notifications
+      .filter((notification) => !notification.read)
+      .length.toString(),
+  });
 }
 
 chrome.storage.onChanged.addListener((changes, namespace) => {

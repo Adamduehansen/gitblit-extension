@@ -14,11 +14,17 @@ type Props = {
   onTicketRemove: (repository: string, number: number) => void;
 };
 
+async function getNotificationForTicket(
+  ticket: Ticket
+): Promise<Notification[]> {
+  return notificationService.getNotifications(ticket.repository, ticket.number);
+}
+
 export default function TicketDetails(props: Props): JSX.Element {
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
   useEffect(() => {
-    notificationService.getNotifications().then((notifications) => {
+    getNotificationForTicket(props.ticket).then((notifications) => {
       setNotifications(notifications);
     });
   }, []);
@@ -31,17 +37,13 @@ export default function TicketDetails(props: Props): JSX.Element {
     for (const notification of notifications) {
       await notificationService.setRead(notification.id);
     }
-    notificationService.getNotifications().then((notifications) => {
+
+    getNotificationForTicket(props.ticket).then((notifications) => {
       setNotifications(notifications);
     });
   }
 
-  const notificationsForTicket = notifications.filter(
-    (notification) =>
-      notification.ticketRepository === props.ticket.repository &&
-      notification.ticketNumber === props.ticket.number
-  );
-  const hasUnreadNotification = notificationsForTicket.some(
+  const hasUnreadNotification = notifications.some(
     (notification) => !notification.read
   );
 
@@ -59,8 +61,8 @@ export default function TicketDetails(props: Props): JSX.Element {
         </button>
       </summary>
       <ul>
-        {notificationsForTicket.map((notification) => {
-          return <li>{notification.message}</li>;
+        {notifications.map((notification) => {
+          return <li key={notification.id}>{notification.message}</li>;
         })}
       </ul>
     </details>
