@@ -18,6 +18,11 @@ const ticketScheme = z.object({
           text: z.string(),
         })
         .optional(),
+      patchset: z
+        .object({
+          added: z.number(),
+        })
+        .optional(),
     })
     .array(),
 });
@@ -39,8 +44,18 @@ interface CommentChange {
   };
 }
 
+interface PatchsetChange {
+  patchset: {
+    added: number;
+  };
+}
+
 function isCommentChange(change: unknown): change is CommentChange {
   return typeof change === 'object' && change !== null && 'comment' in change;
+}
+
+function isPatchsetChange(change: unknown): change is PatchsetChange {
+  return typeof change === 'object' && change !== null && 'patchset' in change;
 }
 
 async function updateTicketInStore(): Promise<void> {
@@ -87,6 +102,15 @@ async function updateTicketInStore(): Promise<void> {
       notificationService.createNotification({
         title: `${ticket.repository}/${ticket.number}: New comment!`,
         message: change.comment.text,
+        ticketRepository: ticket.repository,
+        ticketNumber: ticket.number,
+      });
+    }
+
+    if (isPatchsetChange(change)) {
+      notificationService.createNotification({
+        title: `${ticket.repository}/${ticket.number}: New push!`,
+        message: `${change.patchset.added} commit(s) were added.`,
         ticketRepository: ticket.repository,
         ticketNumber: ticket.number,
       });
