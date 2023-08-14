@@ -23,6 +23,11 @@ const ticketScheme = z.object({
           added: z.number(),
         })
         .optional(),
+      fields: z
+        .object({
+          status: z.string().optional(),
+        })
+        .optional(),
     })
     .array(),
 });
@@ -44,18 +49,28 @@ interface CommentChange {
   };
 }
 
+function isCommentChange(change: unknown): change is CommentChange {
+  return typeof change === 'object' && change !== null && 'comment' in change;
+}
+
 interface PatchsetChange {
   patchset: {
     added: number;
   };
 }
 
-function isCommentChange(change: unknown): change is CommentChange {
-  return typeof change === 'object' && change !== null && 'comment' in change;
-}
-
 function isPatchsetChange(change: unknown): change is PatchsetChange {
   return typeof change === 'object' && change !== null && 'patchset' in change;
+}
+
+interface FieldsChange {
+  fields: {
+    status: string;
+  };
+}
+
+function isFieldsChange(change: unknown): change is FieldsChange {
+  return typeof change === 'object' && change !== null && 'fields' in change;
 }
 
 async function updateTicketInStore(): Promise<void> {
@@ -111,6 +126,15 @@ async function updateTicketInStore(): Promise<void> {
       notificationService.createNotification({
         title: `${ticket.repository}/${ticket.number}: New push!`,
         message: `${change.patchset.added} commit(s) were added.`,
+        ticketRepository: ticket.repository,
+        ticketNumber: ticket.number,
+      });
+    }
+
+    if (isFieldsChange(change)) {
+      notificationService.createNotification({
+        title: `${ticket.repository}/${ticket.number}: Status changed`,
+        message: `Ticket status was changed to "${change.fields.status}"`,
         ticketRepository: ticket.repository,
         ticketNumber: ticket.number,
       });
