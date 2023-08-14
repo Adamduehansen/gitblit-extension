@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { raise } from './utils/raise';
 import { TicketRepository, TicketService } from './services/TicketService';
 import {
+  CreateNotification,
   NotificationService,
   notificationRepository,
 } from './services/NotificationService';
@@ -112,9 +113,10 @@ async function updateTicketInStore(): Promise<void> {
 
   const newChanges = ticket.changes.slice(-amountOfChanges);
 
+  let notifications: CreateNotification[] = [];
   for (const change of newChanges) {
     if (isCommentChange(change)) {
-      notificationService.createNotification({
+      notifications.push({
         title: `${ticket.repository}/${ticket.number}: New comment!`,
         message: change.comment.text,
         ticketRepository: ticket.repository,
@@ -123,7 +125,7 @@ async function updateTicketInStore(): Promise<void> {
     }
 
     if (isPatchsetChange(change)) {
-      notificationService.createNotification({
+      notifications.push({
         title: `${ticket.repository}/${ticket.number}: New push!`,
         message: `${change.patchset.added} commit(s) were added.`,
         ticketRepository: ticket.repository,
@@ -132,7 +134,7 @@ async function updateTicketInStore(): Promise<void> {
     }
 
     if (isFieldsChange(change)) {
-      notificationService.createNotification({
+      notifications.push({
         title: `${ticket.repository}/${ticket.number}: Status changed`,
         message: `Ticket status was changed to "${change.fields.status}"`,
         ticketRepository: ticket.repository,
@@ -140,6 +142,8 @@ async function updateTicketInStore(): Promise<void> {
       });
     }
   }
+
+  await notificationService.createNotifications(notifications);
 
   await ticketService.updateTicket({
     repository: ticket.repository,

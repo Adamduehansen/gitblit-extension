@@ -8,6 +8,11 @@ export type Notification = {
   ticketNumber: number;
 };
 
+export type CreateNotification = Pick<
+  Notification,
+  'title' | 'message' | 'ticketRepository' | 'ticketNumber'
+>;
+
 type NotificationRepository = {
   getNotifications: () => Promise<Notification[]>;
   setNotifications: (notifications: Notification[]) => Promise<void>;
@@ -30,21 +35,34 @@ export const notificationRepository: NotificationRepository = {
 export class NotificationService {
   constructor(private _notificationRepository: NotificationRepository) {}
 
-  async createNotification(
-    notification: Pick<
-      Notification,
-      'title' | 'message' | 'ticketRepository' | 'ticketNumber'
-    >
-  ): Promise<void> {
+  async createNotification(newNotification: CreateNotification): Promise<void> {
     const notifications = await this._notificationRepository.getNotifications();
     const updatedNotifications: Notification[] = [
       ...notifications,
       {
-        ...notification,
+        ...newNotification,
         id: crypto.randomUUID(),
         read: false,
         pushed: false,
       },
+    ];
+    return this._notificationRepository.setNotifications(updatedNotifications);
+  }
+
+  async createNotifications(
+    newNotifications: CreateNotification[]
+  ): Promise<void> {
+    const notifications = await this._notificationRepository.getNotifications();
+    const updatedNotifications: Notification[] = [
+      ...notifications,
+      ...newNotifications.map((notification) => {
+        return {
+          ...notification,
+          id: crypto.randomUUID(),
+          read: false,
+          pushed: false,
+        };
+      }),
     ];
     return this._notificationRepository.setNotifications(updatedNotifications);
   }
