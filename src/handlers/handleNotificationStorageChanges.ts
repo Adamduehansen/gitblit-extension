@@ -33,10 +33,12 @@ export function makeNotificationStorageChangeHandler(): StorageOnChangeHandler {
         notificationService.setPushed(notification.id);
       }
 
+      const numberOfNotifications = notifications.filter(
+        (notification) => !notification.read
+      ).length;
+
       chrome.action.setBadgeText({
-        text: notifications
-          .filter((notification) => !notification.read)
-          .length.toString(),
+        text: numberOfNotifications > 0 ? numberOfNotifications.toString() : '',
       });
     }
   };

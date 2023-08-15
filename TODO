@@ -11,7 +11,7 @@ version 1.0.0:
 Todo:
   ☐ Move Gitblit JSON tab to group if it exists.
   ☐ Click on notification should open ticket.
-  ☐ When no notifications remove badge text?
+  ✔ When no notifications remove badge text? @done(23-08-15 07:24)
 
 misc:
   ☐ Can tickets be created only when tabs are created?
