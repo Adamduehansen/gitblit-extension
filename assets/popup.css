@@ -9,3 +9,41 @@ a:visited {
 body {
   width: 300px;
 }
+
+button {
+  cursor: pointer;
+}
+
+.card {
+  border: 1px solid gray;
+  padding: 5px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+
+.card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card__header button {
+  border: none;
+  background: none;
+  color: gray;
+}
+
+.card__header button:hover {
+  color: black;
+}
+
+.card__header:hover {
+  cursor: pointer;
+}
+
+.button {
+  width: 100%;
+  border-radius: 5px;
+  padding: 5px;
+}
+

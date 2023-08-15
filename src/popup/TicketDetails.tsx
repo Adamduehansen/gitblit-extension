@@ -48,17 +48,22 @@ export default function TicketDetails(props: Props): JSX.Element {
   );
 
   return (
-    <details onToggle={onDetailsToggle}>
-      <summary>
-        <a href={props.ticket.ticketUrl} target='_blank'>
+    <details className='card' onToggle={onDetailsToggle}>
+      <summary className='card__header'>
+        <span>
           {hasUnreadNotification && <span>*</span>} {props.ticket.repository}/
           {props.ticket.number}: {props.ticket.title}
-        </a>
-        <button
-          onClick={removeTicket(props.ticket.repository, props.ticket.number)}
-        >
-          ✕
-        </button>
+        </span>
+        <div>
+          <a href={props.ticket.ticketUrl} target='_blank'>
+            Visit
+          </a>
+          <button
+            onClick={removeTicket(props.ticket.repository, props.ticket.number)}
+          >
+            ✕
+          </button>
+        </div>
       </summary>
       <ul>
         {notifications.map((notification) => {

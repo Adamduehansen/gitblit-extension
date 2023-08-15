@@ -60,15 +60,14 @@ function Popup(): JSX.Element {
         <h1>Gitblit Extension</h1>
       </header>
       <main>
-        <section>
-          <h2>Tickets</h2>
-          {tickets.map((ticket): JSX.Element => {
-            return (
-              <TicketDetails ticket={ticket} onTicketRemove={removeTicket} />
-            );
-          })}
-        </section>
-        <button onClick={onOpenAllClicked}>Create tab group</button>
+        {tickets.map((ticket): JSX.Element => {
+          return (
+            <TicketDetails ticket={ticket} onTicketRemove={removeTicket} />
+          );
+        })}
+        <button class='button' onClick={onOpenAllClicked}>
+          Create tab group
+        </button>
       </main>
     </>
   );
