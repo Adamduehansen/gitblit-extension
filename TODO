@@ -4,8 +4,8 @@ version 1.0.0:
   ✔ Set all notifications to read when details expands. @done(23-08-11 07:00)
   ✔ Detect new pushes to ticket. @done(23-08-13 14:15)
   ✔ Detect ticket status change. @done(23-08-14 07:11)
-  ☐ Better component design.
-  ☐ Action icons.
+  ✔ Better component design. @done(23-08-15 07:16)
+  ✔ Action icons. @done(23-08-15 07:20)
   ☐ Add tests to notification service.
   
 Todo:

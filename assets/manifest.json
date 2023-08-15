@@ -18,7 +18,10 @@
     }
   ],
   "action": {
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "default_icon": {
+      "24": "images/gitblit-icon.png"
+    }
   },
   "permissions": [
     "alarms",
