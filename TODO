@@ -7,6 +7,7 @@ version 1.0.0:
   ✔ Better component design. @done(23-08-15 07:16)
   ✔ Action icons. @done(23-08-15 07:20)
   ☐ Add tests to notification service.
+  ☐ Write readme
   
 Todo:
   ☐ Move Gitblit JSON tab to group if it exists.

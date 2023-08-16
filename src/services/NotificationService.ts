@@ -13,7 +13,7 @@ export type CreateNotification = Pick<
   'title' | 'message' | 'ticketRepository' | 'ticketNumber'
 >;
 
-type NotificationRepository = {
+export type NotificationRepository = {
   getNotifications: () => Promise<Notification[]>;
   setNotifications: (notifications: Notification[]) => Promise<void>;
 };
